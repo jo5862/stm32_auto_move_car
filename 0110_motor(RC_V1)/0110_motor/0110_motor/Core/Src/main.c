@@ -26,6 +26,7 @@
 /* USER CODE BEGIN Includes */
 #include "stm32f4xx_hal.h"
 #include "ultrasonic.h"
+#include "dht.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -65,7 +66,7 @@ typedef enum {
 #define SQUARE 'S'
 #define START 'A'
 #define PAUSE 'P'
-
+//
 
 /* USER CODE END PD */
 
@@ -97,6 +98,9 @@ uint16_t FR_Dist = 0;
 uint16_t B_Dist = 0;
 
 uint8_t current_state = 0;  // Call the function and store its result
+
+uint8_t temperature = 0;  // 온도 변수 추가
+uint8_t humidity = 0;     // 습도 변수 추가
 
 /* USER CODE END PV */
 
@@ -191,16 +195,16 @@ uint8_t Self_Driving_state(void){
   uint16_t Dist_Compare;
   Dist_Compare = FL_Dist - FR_Dist;
 
-  if(FL_Dist >= 30 && FR_Dist >= 30){
+  if(FL_Dist >= 60 && FR_Dist >= 60){
     return FORWARD;
   }
-  else if(Dist_Compare > 0 && FL_Dist > 20){  // 왼쪽으로 치우침
-    return LEFT;
-  }
-  else if(Dist_Compare < 0 && FR_Dist > 20){  // 오른쪽으로 치우침
+  else if(FR_Dist >= FL_Dist && FR_Dist > 40){  // 오른쪽으로 치우침
     return RIGHT;
   }
-  else if(B_Dist >= 20){
+  else if(Dist_Compare > 0 && FL_Dist > 40){  // 왼쪽으로 치우침
+    return LEFT;
+  }
+  else if(B_Dist >= 50){
     return BACKWARD;
   }
   else{
@@ -208,6 +212,7 @@ uint8_t Self_Driving_state(void){
   }
 
 }
+
 
 /* USER CODE END 0 */
 
@@ -246,6 +251,7 @@ int main(void)
   MX_TIM5_Init();
   MX_TIM10_Init();
   MX_TIM11_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart2, &ultra_test, 1);
   HAL_TIM_Base_Start(&htim10);  // Delay용
@@ -253,9 +259,8 @@ int main(void)
   HC06_StartReceive();
   HCSR04_Init();
 
-
-  pwm_num = 450;
-
+  pwm_num = 430;
+  uint8_t dht_cnt = 0;
 //  uint8_t rc_start = 0;
 //  uint8_t rc_mode = 0;
   /* USER CODE END 2 */
@@ -265,6 +270,18 @@ int main(void)
   while (1)
   {
     // Check if data is available from Bluetooth
+    DHT11_Read(&temperature, &humidity);  // DHT11 센서 읽기
+//    printf("Distance 1: %d cm, Distance 2: %d cm, Distance 3: %d cm\r\n",
+//           Get_Distance1(), Get_Distance2(), Get_Distance3());
+//    printf("Temperature: %d°C, Humidity: %d%%\r\n",  // 온습도 출력 추가
+//           temperature, humidity);
+    dht_cnt++;
+    if(dht_cnt >= 40){
+      char buffer[50];
+      sprintf(buffer, "Temp: %d C, Hum: %d %%\r\n", temperature, humidity);
+      HAL_UART_Transmit(&huart6, (uint8_t *)buffer, strlen(buffer), HAL_MAX_DELAY);
+      dht_cnt = 0;
+    }
     HCSR04_Read();
 
     FL_Dist = Get_Distance1() - 3;
@@ -374,13 +391,11 @@ int main(void)
           // Perform action for turning left
           Motor_Direction_Control(RIGHT_TURN);  // 방향 설정
           Motor_PWM_Control(pwm_num - 50);        // 속도 제어
-          HAL_Delay(100);
           break;
         case LEFT:       // 좌회전
           // Perform action for turning right
           Motor_Direction_Control(LEFT_TURN);  // 방향 설정
           Motor_PWM_Control(pwm_num - 50);        // 속도 제어
-          HAL_Delay(100);
           break;
         case BREAKING:
           Motor_PWM_Control(0);        // 브레이크
