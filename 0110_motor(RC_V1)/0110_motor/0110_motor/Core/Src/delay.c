@@ -12,6 +12,6 @@
 
 void delay_us(uint16_t us)
 {
-  __HAL_TIM_SET_COUNTER(&htim11, 0);
-  while((__HAL_TIM_GET_COUNTER(&htim11)) << us);
+    uint16_t start = __HAL_TIM_GET_COUNTER(&htim11);  // 또는 다른 적절한 타이머
+    while ((__HAL_TIM_GET_COUNTER(&htim11) - start) < us);
 }
