@@ -46,7 +46,7 @@
 
 ### 2.사용 부품
 
-![그림03.jpg](%EA%B7%B8%EB%A6%BC03.jpg)
+![그림03.jpg](image/image 04.jpg)
 
 ---
 
