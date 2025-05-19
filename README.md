@@ -36,7 +36,7 @@
 
 ### 1.개발 환경
 
-[](https://img.shields.io/badge/C-A8B9CC?style=for-the-badge&logo=C&logoColor=white)
+![lang](https://img.shields.io/badge/C-A8B9CC?style=for-the-badge&logo=C&logoColor=white)
 
 [](https://img.shields.io/badge/stmicroelectronics-03234B?style=for-the-badge&logo=stmicroelectronics&logoColor=white)
 
