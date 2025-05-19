@@ -1,13 +1,6 @@
 # SmartRover:stm32 활용 탐사로봇
 
 한 줄 설명: STM32F4를 사용한 온습도측정 자율주행 RC카 제작 프로젝트 입니다.
-생성일: 2025년 1월 20일 → 2025년 1월 24일
-태그: Linux, c, mariaDB, raspberry pie, stm32
-개발 인원(역할): 소프트웨어 설계1, 기구부 제작2
-Github: https://github.com/jo5862/stm32_auto_move_car
-시연 영상 : https://drive.google.com/file/d/1YcvuKbiXJZZgSRuTLJkyAE1jlI6I5BtK/view
-
-![image.png](image.png)
 
 ---
 
