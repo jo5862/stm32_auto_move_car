@@ -22,7 +22,7 @@
 
 ### 3.일정
 
-![image.png](image%201.png)
+![image.png](image/image%201.png)
 
 ### 4.플로우 차트
 
