@@ -26,9 +26,9 @@
 
 ### 4.플로우 차트
 
-![image.png](image%202.png)
+![image.png](image/image%202.png)
 
-![image.png](image%203.png)
+![image.png](image/image%203.png)
 
 ---
 
